@@ -5,7 +5,7 @@
 
 bool determine_endianness() {
 	int32_t val = 1;
-	return reinterpret_cast<char&>(val);
+	return *reinterpret_cast<char*>(&val);
 }
 
 const bool LITTLE_ENDIAN = determine_endianness();
