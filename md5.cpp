@@ -1,6 +1,7 @@
 #include "md5.hpp"
 #include <sstream>
 #include <iomanip>
+#include <cstring>
 
 bool determine_endianness() {
 	int32_t val = 1;
@@ -85,8 +86,10 @@ void MD5::pad_input(std::vector<char>& input) {
 
 	} while (input.size() % 64);
 
-	uint64_t* size_section = reinterpret_cast<uint64_t*>(input.data() + input.size());
-	*--size_section = original_size*8;
+	
+	uint64_t size = original_size * 8;
+	void* size_section = reinterpret_cast<uint64_t*>(input.data() + input.size()) - 1;
+	memcpy(size_section, &size, sizeof(uint64_t));
 }
 
 void MD5::compute_hash(char* message, size_t size) {
